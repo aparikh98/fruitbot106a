@@ -7,8 +7,10 @@ How to run:
 3) update send.sh to use your lab login account
 4) On your local machine, run bash send.sh
 5) Enter your password for SCP
-6) Set up your ROS workspace with the files in the folder lab7 
+6) Set up your ROS workspace with the files in the folder fruitbotWS 
     This is a similar set up to Lab 7
 7) Connect to a baxter robot with a gripper on the left arm
 8) Run fruitbot_pickup.py
+
+Dependencies: We require python 2.7 and opencv 3.4.2+
 
