@@ -9,3 +9,6 @@ How to run:
 5) Enter your password for SCP
 6) Set up your ROS workspace with the files in the folder lab7 
     This is a similar set up to Lab 7
+7) Connect to a baxter robot with a gripper on the left arm
+8) Run fruitbot_pickup.py
+
