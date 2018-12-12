@@ -46,7 +46,7 @@ def getOrientation(img, Q):
 
     theta = np.tanh((x_v1)/(y_v1))
 
-    scale = 0.0002
+    scale = 20
     x_v2, y_v2 = evecs[:, sort_indices[1]]
 
     plt.plot(x, y, 'k.')
@@ -261,7 +261,7 @@ def generate_homography(img):
 
 
 if __name__ == '__main__':
-    np_image = cv2.imread("finaldemo.jpg")
+    np_image = cv2.imread("finaldesk.jpg")
     image_copy = np.copy(np_image)
     plt.imshow(np_image)
     plt.show()
