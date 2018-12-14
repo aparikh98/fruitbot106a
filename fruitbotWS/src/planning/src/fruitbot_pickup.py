@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """
-Path Planning Script for Lab 8
-Author: Valmik Prabhu
+Path planning script for fruit bot pick up
+
+Code uses certain components from lab 7 by Valmik Prabhu
 """
 
 import sys
@@ -31,6 +32,74 @@ def euler_to_quaternion(yaw):
     return [quaternion[0], quaternion[1], quaternion[2], quaternion[3]]
 
 
+def generate_obstacle (x,y):
+    obs = PoseStamped()
+
+    obsleft.header.frame_id = "base"
+
+    obsleft.pose.position.x = 0
+    obsleft.pose.position.y = 0
+    obsleft.pose.position.z = 0.764
+
+    obsleft.pose.orientation.x = 1
+    obsleft.pose.orientation.y = 0
+    obsleft.pose.orientation.z = 0
+    obsleft.pose.orientation.w = 0
+
+    obsleft_size = [max(x-.1, 0), 1, 0.2]
+    planner_left.add_box_obstacle(obsleft_size, "left", obsleft)
+
+    obsright.header.frame_id = "base"
+
+    obsright.pose.position.x = x+0.1
+    obsright.pose.position.y = 0
+    obsright.pose.position.z = 0.764
+
+    obsright.pose.orientation.x = 1
+    obsright.pose.orientation.y = 0
+    obsright.pose.orientation.z = 0
+    obsright.pose.orientation.w = 0
+
+    obsright_size = [min(1-(x+.1),0), 1, 0.2]
+    planner_left.add_box_obstacle(obsright_size, "right", obsright)
+
+    obsright.header.frame_id = "base"
+
+    obsdown.pose.position.x = 0
+    obsdown.pose.position.y = 0
+    obsdown.pose.position.z = 0.764
+
+    obsdown.pose.orientation.x = 1
+    obsdown.pose.orientation.y = 0
+    obsdown.pose.orientation.z = 0
+    obsdown.pose.orientation.w = 0
+
+    obsdown_size = [1, max(x-.1, 0), min(1-(x+.1),0), 1, 0.2]
+    planner_left.add_box_obstacle(obsright_size, "down", obsright)
+
+    obsup.header.frame_id = "base"
+
+    obsup.pose.position.x = 0
+    obsup.pose.position.y = y + 0.1
+    obsup.pose.position.z = 0.764
+
+    obsup.pose.orientation.x = 1
+    obsup.pose.orientation.y = 0
+    obsup.pose.orientation.z = 0
+    obsup.pose.orientation.w = 0
+
+    obsright_size = [0, min(1-(y+.1),0), 0.2]
+    planner_left.add_box_obstacle(obsright_size, "up", obsright)
+
+
+    def remove_obstacle():
+        planner_left.remove_obstacle("left")
+        planner_left.remove_obstacle("right")
+        planner_left.remove_obstacle("up")
+        planner_left.remove_obstacle("down")
+
+
+        return
 
 
 def main(list_of_class_objs, basket_coordinates, planner_left):
@@ -62,6 +131,20 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
     home.pose.orientation.y = 0.0
     home.pose.orientation.z = 0.0
     home.pose.orientation.w = 0.0
+
+    intermediate_obstacle = PoseStamped()
+    intermediate_obstacle.header.frame_id = "base"
+
+    intermediate_obstacle.pose.position.x = 0
+    intermediate_obstacle.pose.position.y = 0
+    intermediate_obstacle.pose.position.z = 0.764
+
+    intermediate_obstacle.pose.orientation.x = 1
+    intermediate_obstacle.pose.orientation.y = 0
+    intermediate_obstacle.pose.orientation.z = 0
+    intermediate_obstacle.pose.orientation.w = 0
+
+    intermediate_size = [1, 1, 0.2]
 
     left_gripper = robot_gripper.Gripper('left')
     print('Calibrating...')
@@ -133,6 +216,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
 
             while not rospy.is_shutdown():
                 try:
+                    planner_left.add_box_obstacle(intermediate_obstacle, "intermediate", table_pose)
 
                     #intermidiate_to_fruit stage: move to the top of the fruit location and open the gripper
                     intermidiate_to_fruit = PoseStamped()
@@ -143,7 +227,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
                     intermidiate_to_fruit.pose.position.x = fruit_x
                     intermidiate_to_fruit.pose.position.y = fruit_y
                     intermidiate_to_fruit.pose.position.z = home_z - .1
-                    print("Trying to reach intermidiate_to_fruit position :" + str(fruit_x) + " " + str(fruit_y) + " " + str(fruit_z))
+                    print("Trying to reach intermeidiate_to_fruit position :" + str(fruit_x) + " " + str(fruit_y) + " " + str(fruit_z))
 
 
                     intermidiate_to_fruit.pose.orientation.x = gripper_orientation_x
@@ -156,6 +240,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
                     raw_input("Press <Enter> to move the left arm to intermidiate_to_fruit position: ")
                     if not planner_left.execute_plan(plan):
                         raise Exception("Execution failed")
+                    planner_left.remove_obstacle("intermediate")
                 except Exception as e:
                     print e
                 else:
@@ -165,7 +250,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
 
                 try:
                     #go down to the actual height of the fruit and close gripper
-
+                    fruitobs = generate_obstacle(fruit_x, fruit_y)
                     fruit =  PoseStamped()
                     fruit.header.frame_id = "base"
 
@@ -187,6 +272,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
                     raw_input("Press <Enter> to move the left arm to fruit position: ")
                     if not planner_left.execute_plan(plan):
                         raise Exception("Execution failed")
+                    fruitobs()
                 except Exception as e:
                     print e
 
@@ -200,7 +286,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
 
             while not rospy.is_shutdown():
                 try:
-
+                    fruitobs = generate_obstacle(fruit_x, fruit_y)
                     #intermidiate_to_basket stage1: Lift up to a height higher than the height of the basket
 
                     firt_intermidiate_to_class_i = PoseStamped()
@@ -226,6 +312,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
                     raw_input("Press <Enter> to move the left arm to first_intermidiate_to_class_" + str(i) + "position: ")
                     if not planner_left.execute_plan(plan):
                         raise Exception("Execution failed")
+                    fruitobs()
                 except Exception as e:
                     print e
                 else:
@@ -233,6 +320,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
 
             while not rospy.is_shutdown():
                 try:
+                    planner_left.add_box_obstacle(intermediate_obstacle, "intermediate", table_pose)
 
                     #intermidiate_to_basket stage2: Move to the top of the basket
                     intermidiate_to_class_i = PoseStamped()
@@ -257,6 +345,7 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
                     raw_input("Press <Enter> to move the left arm to second_intermidiate_to_class_" + str(i) + "position: ")
                     if not planner_left.execute_plan(plan):
                         raise Exception("Execution failed")
+                    planner_left.remove_obstacle("intermediate")
                 except Exception as e:
                     print e
                 else:
@@ -265,10 +354,12 @@ def main(list_of_class_objs, basket_coordinates, planner_left):
             while not rospy.is_shutdown():
                 try:
                     #basket stage: put the fruit in the basket
+                    classi_obs = generate_obstacle(classi_x, class_y)
                     plan = planner_left.plan_to_pose(classi, list())
                     raw_input("Press <Enter> to move the left arm to sclass_" + str(i) + "position: ")
                     if not planner_left.execute_plan(plan):
                         raise Exception("Execution failed")
+                    classi_obs()
                 except Exception as e:
                     print e
                 else:
@@ -323,22 +414,23 @@ if __name__ == '__main__':
 
     table_pose.header.frame_id = "base"
 
-    table_pose.pose.position.x = .6
+    table_pose.pose.position.x = 0
     table_pose.pose.position.y = 0
-    table_pose.pose.position.z = -.236
+    table_pose.pose.position.z = 0
 
     table_pose.pose.orientation.x = 1
     table_pose.pose.orientation.y = 0
     table_pose.pose.orientation.z = 0
     table_pose.pose.orientation.w = 0
 
-    table_size = [1, 2, .0001]
+    table_size = [1, 1, 0.764]
 
     planner_left.add_box_obstacle(table_size, "table", table_pose)
 
-    obstacles = list()
 
-    if True:
+    obstacles = list()
+    calibration = false
+    if calibration :
 
         while not rospy.is_shutdown():
             try:
