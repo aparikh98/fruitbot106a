@@ -14,7 +14,7 @@ How to run:
     -ln -s /scratch/shared/baxter_ws/baxter.sh ~/ros_workspaces/fruitbotWS/   \
     -rosrun baxter_tools enable_robot.py -e   \
     -roslaunch baxter_moveit_config demo_baxter.launch left_electric_gripper:=true  \
-    -rosrun planning fruitbot_pickup.py  \
+    -rosrun planning fruitbot_pickup.py   
     
 Dependencies: We require python 2.7 and opencv 3.4.2+
 
