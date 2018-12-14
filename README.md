@@ -1,7 +1,6 @@
 # fruitbot106a
 
-fruitbot.weebly.com 
-
+https://fruitbot.weebly.com/
 
 How to run:
 
