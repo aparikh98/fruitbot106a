@@ -99,7 +99,7 @@ def generate_obstacle (x,y):
         planner_left.remove_obstacle("down")
 
 
-        return
+   return remove_obstacle
 
 
 def main(list_of_class_objs, basket_coordinates, planner_left):
