@@ -1,5 +1,8 @@
 # fruitbot106a
 
+fruitbot.weebly.com 
+
+
 How to run:
 
 1) Clone this repository https://github.com/pjreddie/darknet inside the fruitbot directory
