@@ -14,7 +14,10 @@ How to run:
 7) Connect to a baxter robot with a gripper on the left arm
     -Some commands for baxter (may vary based on your setup)   \
     -ln -s /scratch/shared/baxter_ws/baxter.sh ~/ros_workspaces/fruitbotWS/   \
+    -./baxter.sh [name-of-robot].local  \
+    -source devel/setup.bash \
     -rosrun baxter_tools enable_robot.py -e   \
+    -rosrun baxter_interface joint_trajectory_action_server.py  \
     -roslaunch baxter_moveit_config demo_baxter.launch left_electric_gripper:=true  \
     -rosrun planning fruitbot_pickup.py   
     
