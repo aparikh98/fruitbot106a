@@ -1,4 +1,6 @@
-# fruitbot106a
+# Fruitbot 106a
+
+Aakash Parikh, Hung-Ju Wang, Seungwoo Son, Charlie Tian, Chris Mitchell
 
 https://fruitbot.weebly.com/
 
