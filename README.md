@@ -2,7 +2,7 @@
 
 Aakash Parikh, Hung-Ju Wang, Seungwoo Son, Charlie Tian, Chris Mitchell
 
-https://fruitbot.weebly.com/
+You can find design, implementation, videos and more details at: https://fruitbot.weebly.com/
 
 ### Overview: 
 
