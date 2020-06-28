@@ -2,7 +2,22 @@
 
 https://fruitbot.weebly.com/
 
-How to run:
+### Overview: 
+
+Our project aims to detect various classes of fruits and sort them into target locations.
+
+In order to accomplish this, we need to
+
+- Process and segment images into their various objects and orientations
+    
+- Develop a backend, offline fruit classifier and use said model to classify the fruits
+    
+- Translate image coordinates and orientations into real-world coordinates and orientations through homography
+    
+- Plan and execute paths to pick up and place each fruit while taking in account the physical setup to avoid collisions or damaging any items
+    
+
+### How to run:
 
 1) Clone this repository https://github.com/pjreddie/darknet inside the fruitbot directory
 2) Save your target image within the directory
